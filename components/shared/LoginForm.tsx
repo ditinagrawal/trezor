@@ -7,7 +7,7 @@ import Link from "next/link";
 
 export default function LoginForm() {
   const handleSignIn = () => {
-    signIn("google", { callbackUrl: "/dashboard" });
+    signIn("google", { callbackUrl: "/vaults" });
   };
   return (
     <Card className="shadow-sm">

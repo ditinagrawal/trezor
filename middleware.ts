@@ -17,7 +17,7 @@ export default auth((req): any => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return Response.redirect(new URL("/dashboard", nextUrl));
+      return Response.redirect(new URL("/vaults", nextUrl));
     }
     return null;
   }

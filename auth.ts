@@ -16,7 +16,7 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             email: email,
           });
           if (!existingUser) {
-            const res = await fetch(`${process.env.NEXT_URL}api/save-user`, {
+            const res = await fetch(`${process.env.NEXT_URL}/api/save-user`, {
               method: "POST",
               body: JSON.stringify({ name, email, image }),
             });

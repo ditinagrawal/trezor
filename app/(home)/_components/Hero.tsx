@@ -40,7 +40,7 @@ const Hero = () => {
             <ArrowRight className="size-4" />
           </Link>
           <Link
-            href={""}
+            href={"/vaults"}
             className={cn(
               buttonVariants({
                 size: "lg",

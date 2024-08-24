@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Navbar = () => {
   return (
-    <header className="w-full py-4 border-b fixed top-0 shadow backdrop-blur-md">
+    <header className="w-full py-4 fixed top-0 shadow backdrop-blur-md">
       <nav className="w-11/12 mx-auto flex items-center justify-between">
         <div>
           <span className="text-2xl font-bold">Trezor</span>
@@ -18,7 +18,9 @@ const Navbar = () => {
             <Link href={"/auth/sign-in"}>Sign in</Link>
           </li>
           <li>
-            <Button>Get Started</Button>
+            <Link href={"/vaults"}>
+              <Button>Get Started</Button>
+            </Link>
           </li>
         </ul>
       </nav>

@@ -5,7 +5,6 @@ const { auth } = NextAuth(authConfig);
 export default auth((req): any => {
   const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  console.log("🚀 ~ file: middleware.ts:9 ~ auth ~ isLoggedIn:", isLoggedIn);
 
   const isApiAuthRoute = nextUrl.pathname.startsWith("/api");
   const isPublicRoute = ["/"].includes(nextUrl.pathname);

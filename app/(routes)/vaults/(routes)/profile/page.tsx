@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Profile from "../../_components/Profile";
 
 export const metadata: Metadata = {
   title: "Profile",
@@ -6,8 +7,8 @@ export const metadata: Metadata = {
 
 const ProfilePage = () => {
   return (
-    <div>
-      <h1>Profile Page</h1>
+    <div className="flex items-center justify-center p-20">
+      <Profile />
     </div>
   );
 };

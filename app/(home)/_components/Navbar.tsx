@@ -16,11 +16,8 @@ const Navbar = () => {
           <li className="hidden sm:block">
             <Link href={"#pricing"}>Pricing</Link>
           </li>
-          <li className="hidden sm:block">
-            <Link href={"/auth/sign-in"}>Sign in</Link>
-          </li>
           <li>
-            <Link href={"/vaults"}>
+            <Link href={"/auth/sign-in"}>
               <Button>Get Started</Button>
             </Link>
           </li>

@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaGithub } from "react-icons/fa";
 
 const Hero = () => {
   return (
@@ -61,7 +60,7 @@ const Hero = () => {
           <div className="aspect-video overflow-hidden rounded-xl border md:rounded-lg">
             <Image
               className="size-full object-cover object-center dark:opacity-85 dark:invert"
-              src="/cover.gif"
+              src="/vaults.png"
               alt="preview landing"
               width={2000}
               height={1000}

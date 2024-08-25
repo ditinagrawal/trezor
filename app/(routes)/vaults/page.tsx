@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import Vaults from "./_components/Vaults";
 
 export const metadata: Metadata = {
   title: "Vaults | Trezor",
@@ -7,7 +8,7 @@ export const metadata: Metadata = {
 const VaultsPage = () => {
   return (
     <main>
-      <h1>Vaults</h1>
+      <Vaults />
     </main>
   );
 };

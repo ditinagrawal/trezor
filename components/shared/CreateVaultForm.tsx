@@ -21,10 +21,12 @@ import { VaultSchema } from "@/schema/VaultSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const CreateVaultForm = () => {
+  const { data: user } = useSession();
   const form = useForm<z.infer<typeof VaultSchema>>({
     resolver: zodResolver(VaultSchema),
     defaultValues: {
@@ -34,10 +36,21 @@ const CreateVaultForm = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof VaultSchema>) {
+  async function onSubmit(values: z.infer<typeof VaultSchema>) {
     // TODO: Upload media to uploadthing
     // TODO: Save the vault to the database
-    console.log(values);
+    const formdata = {
+      ...values,
+      userId: user?.user?.email,
+      createdAt: new Date(),
+      status: "LOCKED",
+    };
+    const res = await fetch("/api/save-vault", {
+      method: "POST",
+      body: JSON.stringify(formdata),
+    });
+    const data = await res.json();
+    console.log("🚀 ~ file: CreateVaultForm.tsx:53 ~ onSubmit ~ data:", data);
   }
 
   return (

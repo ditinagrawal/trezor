@@ -1,50 +1,38 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
-import { VaultSchema } from "@/schema/VaultSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { useState } from "react";
+import { Label } from "../ui/label";
 
 const CreateVaultForm = () => {
   const { data: user } = useSession();
-  const form = useForm<z.infer<typeof VaultSchema>>({
-    resolver: zodResolver(VaultSchema),
-    defaultValues: {
-      userId: "123",
-      createdAt: new Date(),
-      status: "LOCKED",
-    },
-  });
 
-  async function onSubmit(values: z.infer<typeof VaultSchema>) {
+  const [name, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [unlockDate, setUnlockDate] = useState("");
+  const [media, setMedia] = useState<File | null>(null);
+
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     // TODO: Upload media to uploadthing
     // TODO: Save the vault to the database
     const formdata = {
-      ...values,
+      name,
+      message,
+      unlockDate,
+      mediaURL: media?.name,
       userId: user?.user?.email,
       createdAt: new Date(),
       status: "LOCKED",
     };
+    console.log(
+      "🚀 ~ file: CreateVaultForm.tsx:32 ~ onSubmit ~ formdata:",
+      formdata
+    );
     const res = await fetch("/api/save-vault", {
       method: "POST",
       body: JSON.stringify(formdata),
@@ -54,103 +42,66 @@ const CreateVaultForm = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="flex flex-col gap-2 mb-8">
-          <h1 className="text-3xl text-center font-semibold">Create a vault</h1>
-          <p className="text-muted-foreground">
-            Please fill all the neccessary fields to create a vault
-          </p>
-        </div>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>
-                {fieldState.error ? fieldState.error.message : "Name"}
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="Name" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>
-                {fieldState.error ? fieldState.error.message : "Message"}
-              </FormLabel>
-              <FormControl>
-                <Textarea placeholder="Message" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="unlockDate"
-          render={({ field, fieldState }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>
-                {fieldState.error ? fieldState.error.message : "Unlock Date"}
-              </FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant={"outline"}
-                      className={cn(
-                        "pl-3 text-left font-normal",
-                        !field.value && "text-muted-foreground"
-                      )}
-                    >
-                      {field.value ? (
-                        format(field.value, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={field.value}
-                    onSelect={field.onChange}
-                    // disabled={(date) =>
-                    //   date > new Date() || date < new Date("1900-01-01")
-                    // }
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="mediaURL"
-          render={({ field, fieldState }) => (
-            <FormItem>
-              <FormLabel>
-                {fieldState.error ? fieldState.error.message : "Media URL"}
-              </FormLabel>
-              <FormControl>
-                <Input type="file" {...field} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <Button className="w-full" type="submit">
-          Submit
-        </Button>
-      </form>
-    </Form>
+    <form onSubmit={onSubmit} className="space-y-4">
+      <div className="flex flex-col gap-2 mb-8">
+        <h1 className="text-3xl text-center font-semibold">Create a vault</h1>
+        <p className="text-muted-foreground">
+          Please fill all the neccessary fields to create a vault
+        </p>
+      </div>
+      <div>
+        <Label className="space-y-1">
+          <span>Name</span>
+          <Input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            maxLength={20}
+            placeholder="Name"
+            required
+          />
+        </Label>
+      </div>
+      <div>
+        <Label className="space-y-1">
+          <span>Message</span>
+          <Textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            minLength={10}
+            maxLength={50}
+            placeholder="Message"
+            required
+          />
+        </Label>
+      </div>
+      <div>
+        <Label className="space-y-1">
+          <span>Unlock Date</span>
+          <Input
+            value={unlockDate}
+            onChange={(e) => setUnlockDate(e.target.value)}
+            type="date"
+            placeholder="unlock Date"
+            required
+          />
+        </Label>
+      </div>
+      <Input
+        onChange={(e) => {
+          if (e.target.files && e.target.files.length > 0) {
+            setMedia(e.target.files[0]);
+          }
+        }}
+        type="file"
+        multiple={false}
+        required
+        className="cursor-pointer"
+      />
+      <Button className="w-full" type="submit">
+        Submit
+      </Button>
+    </form>
   );
 };
 
